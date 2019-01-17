@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>コメント</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button end fill="clear" (click)="dismissModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form #f2="ngForm" name="form">
+    <ion-list class="inputBlock">
+      <ion-item padding-bottom class="textBlock">
+        <ion-label position="floating">コメント</ion-label>
+        <ion-input
+                [(ngModel)]="message"
+                required type="text"
+                name="message">
+        </ion-input>
+      </ion-item>
+      <ion-button
+              (click)="addComment()"
+              type="submit"
+              [disabled]="!f2.form.valid"
+              expand="block"
+              class="submit"
+      >投稿</ion-button
+      >
+    </ion-list>
+  </form>
+
+  <ion-card class="singlePost">
+    <ion-item> <h2>{{sourcePost.userName}}</h2> </ion-item>
+    <ion-card-content>
+      <p margin-vertical>{{sourcePost.message}}</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-grid>
+    <ion-row> <h2>この投稿へのコメント</h2> </ion-row>
+    <ion-row *ngFor="let c of comments">
+      <ion-col class="commentItem" col-12 col-sm>
+        <h3>{{c.userName}}</h3>
+        <p>{{c.message}}</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

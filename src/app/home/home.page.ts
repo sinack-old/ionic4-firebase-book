@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, ModalController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
 
 import { Post } from '../models/post';
+
+import { CommentsPage } from '../comments/comments.page';
 
 @Component({
     selector: 'app-home',
@@ -24,10 +28,13 @@ export class HomePage implements OnInit {
         private alertCtrl: AlertController,
         private toastCtrl: ToastController,
         private afStore: AngularFirestore,
-        private afAuth: AngularFireAuth
+        private afAuth: AngularFireAuth,
+        private router: Router,
+        private modalCtrl: ModalController
     ) {}
 
     ngOnInit() {
+        this.afStore.firestore.enableNetwork();
         // コンポーネントの初期化時に、投稿を読み込むgetPosts()を実行
         this.getPosts();
     }
@@ -152,5 +159,43 @@ export class HomePage implements OnInit {
                 await toast.present();
             });
     }
-}
 
+    // 投稿日時と現在日時との差を返す
+    differenceTime(time: Date): string {
+        moment.locale('ja');
+        return moment(time).fromNow();
+    }
+
+    // ログアウト処理
+    logout() {
+        this.afStore.firestore.disableNetwork();
+        this.afAuth.auth
+            .signOut()
+            .then(async () => {
+                const toast = await this.toastCtrl.create({
+                    message: 'ログアウトしました',
+                    duration: 3000
+                });
+                await toast.present();
+                this.router.navigateByUrl('/login');
+            })
+            .catch(async error => {
+                const toast = await this.toastCtrl.create({
+                    message: error.toString(),
+                    duration: 3000
+                });
+                await toast.present();
+            });
+    }
+
+    // コメントページへ現在の投稿を受け渡しつつ移動
+    async showComment(post: Post) {
+        const modal = await this.modalCtrl.create({
+            component: CommentsPage,
+            componentProps: {
+                sourcePost: post
+            }
+        });
+        return await modal.present();
+    }
+}
