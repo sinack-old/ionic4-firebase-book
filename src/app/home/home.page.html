@@ -1,12 +1,59 @@
+<!--ここが画面上のヘッダー部分です-->
 <ion-header>
   <ion-toolbar>
     <ion-title>
-      Ionic Blank
+      Ionic 掲示板
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
+<!--ここがメインコンテンツ部分です-->
 <ion-content padding>
-  The world is your oyster.
-  <p>If you get lost, the <a target="_blank" rel="noopener" href="https://beta.ionicframework.com/docs/">docs</a> will be your guide.</p>
+  <form #f="ngForm" (submit)="addPost()" name="form">
+    <ion-list class="inputBlock">
+
+      <ion-item margin-bottom class="textBlock">
+        <ion-label position="floating">メッセージ</ion-label>
+        <ion-input
+                name="message" required [(ngModel)]="message"
+                type="text">
+        </ion-input>
+      </ion-item>
+      <ion-button type="submit" expand="full" block class="submit"
+                  [disabled]="!f.form.valid"
+      >投稿</ion-button>
+    </ion-list>
+  </form>
+
+  <ion-card class="singlePost" *ngFor="let p of posts; let i = index">
+    <ion-item>
+      <h2 padding-vertical>{{p.userName}}</h2>
+    </ion-item>
+    <ion-card-content>
+      <div margin-bottom>{{p.message}}</div>
+      <ion-row>
+        <ion-col size="6" size-sm>
+          <ion-button fill="clear" size="small">
+            <ion-icon name="text"></ion-icon>
+            <div>コメント</div>
+          </ion-button>
+        </ion-col>
+        <ion-col size="6" size-sm>
+          <ion-button (click)="presentPrompt(i)" fill="clear" size="small">
+            <ion-icon name="create"></ion-icon>
+            <div>編集</div>
+          </ion-button>
+        </ion-col>
+        <ion-col size="6" size-sm>
+          <ion-button (click)="deletePost(i)" fill="clear" size="small">
+            <ion-icon name="trash"></ion-icon>
+            <div>削除</div>
+          </ion-button>
+        </ion-col>
+        <ion-col size="6" size-sm class="postedTime">
+          <ion-note>{{p.createdDate}}</ion-note>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
