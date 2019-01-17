@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>アカウント登録</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-item class="signupHeader" lines="none" text-center>
+    <ion-label>
+      <h1>メッセージボード</h1>
+      <p>まずはアカウントを登録しましょう！</p>
+    </ion-label>
+  </ion-item>
+
+  <form #f="ngForm" class="signupForm">
+    <ion-item class="formItem">
+      <ion-label position="floating">
+        <ion-icon name="mail"></ion-icon>メールアドレス
+      </ion-label>
+      <ion-input
+              required
+              email
+              [(ngModel)]="signup.email"
+              type="email"
+              name="signup.email"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item class="formItem">
+      <ion-label position="floating">
+        <ion-icon name="key" padding-right></ion-icon>パスワード
+      </ion-label>
+      <ion-input
+              required
+              [(ngModel)]="signup.password"
+              type="password"
+              name="signup.password"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item class="formItem">
+      <ion-label position="floating">
+        <ion-icon name="person" padding-right></ion-icon>名前
+      </ion-label>
+      <ion-input
+              required
+              [(ngModel)]="signup.name"
+              type="text"
+              name="signup.name"
+      ></ion-input>
+    </ion-item>
+
+    <ion-button
+            class="submitBtn"
+            [disabled]="!f.form.valid"
+            (click)="signUp()"
+            size="large"
+            expand="block"
+    >
+      アカウント登録
+    </ion-button>
+  </form>
+
+  <ion-button class="subLink" (click)="goBack()" fill="clear">
+    既にアカウントをお持ちの方はこちら
+  </ion-button>
+</ion-content>
